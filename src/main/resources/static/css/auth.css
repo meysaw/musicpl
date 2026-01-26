@@ -159,6 +159,7 @@ body {
 .auth-logo .logo-icon {
     font-size: 3rem;
     background: var(--accent-gradient);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 12px;
@@ -182,6 +183,7 @@ body {
     font-size: 2rem;
     font-weight: 700;
     background: var(--accent-gradient);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.5px;
@@ -266,17 +268,22 @@ body {
 }
 
 /* Password Toggle */
-.password-toggle {
+#togglePassword,
+#toggleConfirmPassword {
     position: absolute;
     right: 18px;
+    left: auto;
     color: var(--text-secondary);
     cursor: pointer;
     font-size: 1.1rem;
     transition: color 0.2s ease;
-    z-index: 2;
+    z-index: 10;
+    pointer-events: auto;
+
 }
 
-.password-toggle:hover {
+#togglePassword:hover,
+#toggleConfirmPassword:hover {
     color: var(--text-primary);
 }
 
@@ -284,7 +291,7 @@ body {
 .error-message {
     font-size: 0.85rem;
     color: var(--error-color);
-    margin-top: -16px;
+    margin-top: -5px;
     margin-left: 4px;
     display: none;
     animation: shake 0.3s ease;

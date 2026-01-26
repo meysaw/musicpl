@@ -21,6 +21,10 @@ const progressBar = document.getElementById('progressBar');
 const currentTimeEl = document.getElementById('currentTime');
 const totalDurationEl = document.getElementById('totalDuration');
 
+// Like Button
+const likeBtn = document.querySelector('.player-bar .like-btn');
+const likeIcon = likeBtn.querySelector('i');
+
 let currentTrackList = [];
 let currentTrackIndex = 0;
 let isPlaying = false;
@@ -58,6 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Pre-fill input
     document.getElementById('clientIdInput').value = clientId;
+
+    // Like button event
+    likeBtn.addEventListener('click', toggleLike);
 });
 
 // Settings / Modal
@@ -91,12 +98,16 @@ function showSection(sectionId) {
     const navItems = document.querySelectorAll('nav li');
     if (sectionId === 'home') navItems[0].classList.add('active');
     if (sectionId === 'search') navItems[1].classList.add('active');
-    // skip library for now
+    if (sectionId === 'library') {
+        navItems[2].classList.add('active');
+        fetchLikedTracks();
+    }
     if (sectionId === 'download') navItems[3].classList.add('active');
 
     let targetId = '';
     if (sectionId === 'home') targetId = 'home-view';
     else if (sectionId === 'search') targetId = 'search-results';
+    else if (sectionId === 'library') targetId = 'library-view';
     else if (sectionId === 'download') targetId = 'download-view';
 
     const section = document.getElementById(targetId);
@@ -210,6 +221,7 @@ function renderSearchList(tracks, containerId) {
             <span><i class="fa-solid fa-play-circle"></i></span>
         `;
         item.addEventListener('click', () => {
+            currentTrackList = tracks; // Important to update context
             loadTrack(index);
         });
         container.appendChild(item);
@@ -234,8 +246,110 @@ function loadTrack(index) {
         audioPlayer.play().catch(e => console.error("Playback error:", e));
         isPlaying = true;
         updatePlayBtn();
+        checkIfLiked(track.id);
     } else {
         alert("No audio stream available for this track.");
+    }
+}
+
+async function checkIfLiked(trackId) {
+    const userJson = localStorage.getItem('jamplayer_current_user');
+    if (!userJson) {
+        setLikeStatus(false);
+        return;
+    }
+
+    const user = JSON.parse(userJson);
+    try {
+        const response = await fetch(`/api/library/check?userId=${user.id}&trackId=${trackId}`);
+        const isLiked = await response.json();
+        setLikeStatus(isLiked);
+    } catch (error) {
+        console.error("Error checking like status:", error);
+    }
+}
+
+function setLikeStatus(isLiked) {
+    if (isLiked) {
+        likeBtn.style.color = '#ff4b4b';
+        likeIcon.classList.remove('fa-regular');
+        likeIcon.classList.add('fa-solid');
+    } else {
+        likeBtn.style.color = 'var(--text-secondary)';
+        likeIcon.classList.remove('fa-solid');
+        likeIcon.classList.add('fa-regular');
+    }
+}
+
+async function toggleLike() {
+    const userJson = localStorage.getItem('jamplayer_current_user');
+    if (!userJson) {
+        alert("Please login to like tracks!");
+        return;
+    }
+
+    if (currentTrackIndex < 0 || currentTrackList.length === 0) return;
+
+    const user = JSON.parse(userJson);
+    const track = currentTrackList[currentTrackIndex];
+    const isCurrentlyLiked = likeIcon.classList.contains('fa-solid') && !likeIcon.classList.contains('fa-regular');
+
+    try {
+        if (isCurrentlyLiked) {
+            // Unlike
+            await fetch(`/api/library/unlike?userId=${user.id}&trackId=${track.id}`, {
+                method: 'DELETE'
+            });
+            setLikeStatus(false);
+        } else {
+            // Like
+            await fetch('/api/library/like', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: user.id,
+                    trackId: track.id,
+                    trackName: track.name,
+                    artistName: track.artist_name,
+                    albumImage: track.album_image,
+                    audioUrl: track.audio
+                })
+            });
+            setLikeStatus(true);
+        }
+    } catch (error) {
+        console.error("Error toggling like:", error);
+    }
+}
+
+async function fetchLikedTracks() {
+    const userJson = localStorage.getItem('jamplayer_current_user');
+    if (!userJson) {
+        document.getElementById('library-tracks-list').innerHTML = '<p>Please login to see your library.</p>';
+        return;
+    }
+
+    const user = JSON.parse(userJson);
+    try {
+        const response = await fetch(`/api/library/${user.id}`);
+        const tracks = await response.json();
+
+        const formattedTracks = tracks.map(t => ({
+            id: t.trackId,
+            name: t.trackName,
+            artist_name: t.artistName,
+            album_image: t.albumImage,
+            audio: t.audioUrl
+        }));
+
+        if (formattedTracks.length > 0) {
+            renderSearchList(formattedTracks, 'library-tracks-list');
+        } else {
+            document.getElementById('library-tracks-list').innerHTML = '<p>Your library is empty. Start liking some tracks!</p>';
+        }
+    } catch (error) {
+        console.error("Error fetching library:", error);
+        document.getElementById('library-tracks-list').innerHTML = '<p>Error loading library.</p>';
     }
 }
 

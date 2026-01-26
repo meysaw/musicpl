@@ -63,15 +63,18 @@ body {
     align-items: center;
     gap: 12px;
     background: var(--accent-gradient);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.5px;
+    /* Ensure the gradient covers the whole logo area */
+    width: fit-content;
 }
 
 .logo i {
-    -webkit-text-fill-color: initial;
-    color: #db2777;
-    /* Fallback/Icon color */
+    /* The icon will now inherit the gradient clip from the parent */
+    color: #7c3aed;
+    /* Fallback for older browsers */
 }
 
 nav ul {
@@ -411,6 +414,24 @@ h2 {
     color: var(--text-primary);
     transform: scale(1.1);
 }
+
+.like-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.like-btn:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+
 
 .controls button.play-pause {
     background: #fff;

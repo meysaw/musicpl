@@ -16,7 +16,8 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <i class="fa-solid fa-music"></i> <span>JamPlayer</span>
+                <i class="fa-solid fa-music"> </i>
+                <span>musiQ</span>
             </div>
             <nav>
                 <ul>
@@ -50,6 +51,13 @@
                     <h2>Search Results</h2>
                     <div class="track-list" id="search-tracks-list">
                         <!-- Search results injected here -->
+                    </div>
+                </div>
+
+                <div id="library-view" style="display: none;">
+                    <h2>My Library</h2>
+                    <div class="track-list" id="library-tracks-list">
+                        <!-- Liked tracks injected here -->
                     </div>
                 </div>
 
@@ -98,9 +106,13 @@
     <div class="player-bar">
         <div class="track-info">
             <img src="https://via.placeholder.com/64" alt="Album Art" id="player-img">
+
             <div class="text">
                 <h4 id="player-title">Select a track</h4>
                 <p id="player-artist">--</p>
+            </div>
+            <div class="like-btn">
+                <i class="fa-solid fa-heart"></i>
             </div>
         </div>
 
@@ -115,6 +127,7 @@
                 <input type="range" id="progressBar" min="0" value="0" step="1">
                 <span id="totalDuration">0:00</span>
             </div>
+
         </div>
 
         <div class="volume-control">
