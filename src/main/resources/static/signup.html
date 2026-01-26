@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - JamPlayer</title>
+    <meta name="description" content="Create your JamPlayer account and start enjoying music">
+    <link rel="stylesheet" href="css/auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Animated Background Orbs -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Logo Section -->
+            <div class="auth-logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-music"></i>
+                </div>
+                <h1>Create Account</h1>
+                <p>Join JamPlayer and discover amazing music</p>
+            </div>
+
+            <!-- Signup Form -->
+            <form class="auth-form" id="signupForm" novalidate>
+                <!-- Full Name Field -->
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name"
+                            autocomplete="name" required>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="error-message" id="fullNameError"></div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" placeholder="Enter your email" autocomplete="email"
+                            required>
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Create a strong password"
+                            autocomplete="new-password" required>
+                        <i class="fa-solid fa-lock"></i>
+                        <i class="fa-solid fa-eye password-toggle" id="togglePassword"></i>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                    <!-- Password Strength Indicator -->
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar">
+                            <div class="strength-bar-fill" id="strengthBarFill"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText"></div>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirmPassword" name="confirmPassword"
+                            placeholder="Re-enter your password" autocomplete="new-password" required>
+                        <i class="fa-solid fa-lock"></i>
+                        <i class="fa-solid fa-eye password-toggle" id="toggleConfirmPassword"></i>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                    <label for="agreeTerms">
+                        I agree to the <a href="#" id="termsLink">Terms & Conditions</a>
+                    </label>
+                </div>
+                <div class="error-message" id="termsError"></div>
+
+                <!-- Success Message -->
+                <div class="success-message" id="successMessage">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Account created! Redirecting...</span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">Create Account</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html" id="loginLink">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

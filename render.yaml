@@ -1,0 +1,36 @@
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: jamplayer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Application
+  web:
+    type: web
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: database
+          property: connectionString
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+    healthCheckPath: /
+    autoDeploy: true
+
+databases:
+  - name: database
+    databaseName: jamplayer
+    user: postgres
+    plan: free
