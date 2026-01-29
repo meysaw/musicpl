@@ -1,4 +1,4 @@
-const DEFAULT_CLIENT_ID = '841052ed'; // User provided ID
+const DEFAULT_CLIENT_ID = '841052ed';
 const SUSPENDED_ID = 'a5518597';
 const API_URL = 'https://api.jamendo.com/v3.0';
 
@@ -24,18 +24,41 @@ const totalDurationEl = document.getElementById('totalDuration');
 // Like Button
 const likeBtn = document.querySelector('.player-bar .like-btn');
 const likeIcon = likeBtn.querySelector('i');
-
+let downloadBtn;
 let currentTrackList = [];
 let currentTrackIndex = 0;
 let isPlaying = false;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Check login status first
+    checkLoginStatus();
+
+    // Redirect if not logged in
+    if (!localStorage.getItem('jamplayer_current_user')) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Load initial content
     fetchTrendingTracks();
 
     // Event Listeners
     playBtn.addEventListener('click', togglePlay);
     volumeSlider.addEventListener('input', (e) => audioPlayer.volume = e.target.value);
+
+    // Like button
+    likeBtn.addEventListener('click', toggleLike);
+
+    // Download button
+    downloadBtn = document.querySelector('.player-bar .download-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', downloadTrack);
+    }
+
+    // Sign out button
+    const signOutBtn = document.getElementById('sign-out-btn');
+    if (signOutBtn) signOutBtn.addEventListener('click', handleSignOut);
 
     // Progress Bar Listeners
     audioPlayer.addEventListener('timeupdate', updateProgress);
@@ -47,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.currentTime = progressBar.value;
     });
 
+    // Search
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             searchTracks(e.target.value);
@@ -57,15 +81,42 @@ document.addEventListener('DOMContentLoaded', () => {
     prevBtn.addEventListener('click', playPrev);
     nextBtn.addEventListener('click', playNext);
 
-    // Settings modal interactions
-    document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
-
-    // Pre-fill input
-    document.getElementById('clientIdInput').value = clientId;
-
-    // Like button event
-    likeBtn.addEventListener('click', toggleLike);
+    // Pre-fill client ID input if it exists
+    const idInput = document.getElementById('clientIdInput');
+    if (idInput) idInput.value = clientId;
 });
+
+function checkLoginStatus() {
+    const userJson = localStorage.getItem('jamplayer_current_user');
+    const userBtn = document.getElementById('user-btn');
+
+    if (userJson) {
+        const user = JSON.parse(userJson);
+
+    } else {
+
+    }
+}
+
+function handleUserBtnClick() {
+    const userJson = localStorage.getItem('jamplayer_current_user');
+    if (userJson) {
+        // Logged in -> Open Profile/Settings
+        openSettings();
+        // Populate profile fields
+        const user = JSON.parse(userJson);
+        const nameDisplay = document.getElementById('user-name-display');
+        if (nameDisplay) nameDisplay.value = user.fullName;
+
+        const idInput = document.getElementById('clientIdInput');
+        if (idInput) idInput.value = clientId; // Current Client ID
+    } else {
+        // Not logged in -> Go to Login
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1500);
+    }
+}
 
 // Settings / Modal
 function openSettings() {
@@ -76,15 +127,16 @@ function closeSettings() {
     document.getElementById('settings-modal').style.display = 'none';
 }
 
-function saveSettings() {
-    const newId = document.getElementById('clientIdInput').value.trim();
-    if (newId) {
-        clientId = newId;
-        localStorage.setItem('jamendo_client_id', clientId);
-        closeSettings();
-        // Reload content
-        fetchTrendingTracks();
-    }
+
+
+function handleSignOut() {
+    console.log("Signing out...");
+    localStorage.removeItem('jamplayer_current_user');
+    localStorage.removeItem('jamplayer_remember');
+    localStorage.removeItem('jamendo_client_id');
+
+    closeSettings();
+    window.location.href = 'login.html';
 }
 
 // Navigation
@@ -280,7 +332,14 @@ function setLikeStatus(isLiked) {
         likeIcon.classList.add('fa-regular');
     }
 }
+function downloadTrack() {
+    const track = currentTrackList[currentTrackIndex];
+    if (!track || !track.id) return alert("Play a track first!");
 
+    // Direct redirection for download
+    const downloadUrl = `/api/download/jamendo?trackId=${track.id}`;
+    window.location.href = downloadUrl;
+}
 async function toggleLike() {
     const userJson = localStorage.getItem('jamplayer_current_user');
     if (!userJson) {
@@ -407,30 +466,3 @@ function formatTime(seconds) {
     const sec = Math.floor(seconds % 60);
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
-
-// Download Feature
-document.addEventListener('DOMContentLoaded', () => {
-    const dlBtn = document.getElementById('yt-download-btn');
-    if (dlBtn) {
-        dlBtn.addEventListener('click', () => {
-            const url = document.getElementById('yt-link-input').value.trim();
-            const statusDiv = document.getElementById('download-status');
-
-            if (!url) {
-                statusDiv.innerHTML = '<span style="color: #f87171;">Please enter a URL.</span>';
-                return;
-            }
-
-            const encodedUrl = encodeURIComponent(url);
-
-            // Direct Native Download
-            // This will trigger the browser to download the file directly from our server
-            window.location.href = `/api/download?url=${encodedUrl}`;
-
-            statusDiv.innerHTML = `
-                <p style="color: #4ade80; margin-bottom: 10px;"><i class="fa-solid fa-spinner fa-spin"></i> Converting & Downloading...</p>
-                <p style="font-size: 0.8rem; color: #71717a;">Please wait. The file will start downloading automatically.</p>
-            `;
-        });
-    }
-});

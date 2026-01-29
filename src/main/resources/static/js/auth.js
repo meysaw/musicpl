@@ -216,7 +216,7 @@ const handleLogin = async (e) => {
         return;
     }
 
-    const submitBtn = document.getElementById('submitBtn');
+    const submitBtn = document.getElementById('loginBtn');
     const successMessage = document.getElementById('successMessage');
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -337,6 +337,7 @@ const handleSignup = async (e) => {
 
 // Initialize Page
 document.addEventListener('DOMContentLoaded', () => {
+
     // Setup password toggles
     setupPasswordToggle('togglePassword', 'password');
     setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');

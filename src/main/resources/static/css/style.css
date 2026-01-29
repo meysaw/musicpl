@@ -415,23 +415,42 @@ h2 {
     transform: scale(1.1);
 }
 
-.like-btn {
+.player-bar .like-btn {
     background: none;
     border: none;
     color: var(--text-secondary);
-    font-size: 1.3rem;
+    font-size: 1.0rem;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 40px;
+
 }
 
-.like-btn:hover {
+.player-bar .like-btn:hover {
     color: var(--text-primary);
     transform: scale(1.1);
 }
 
+.player-bar .download-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.0rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 40px;
+}
+
+.player-bar .download-btn:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
 
 .controls button.play-pause {
     background: #fff;
@@ -620,7 +639,7 @@ h2 {
     border-bottom-color: #a78bfa;
 }
 
-#saveSettingsBtn {
+#sign-out-btn {
     background: var(--accent-gradient);
     color: white;
     border: none;
@@ -633,7 +652,7 @@ h2 {
     box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
 }
 
-#saveSettingsBtn:hover {
+#sign-out-btn:hover {
     filter: brightness(1.1);
     transform: scale(1.02);
 }

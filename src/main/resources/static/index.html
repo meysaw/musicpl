@@ -24,7 +24,6 @@
                     <li class="active" onclick="showSection('home')"><i class="fa-solid fa-house"></i> Home</li>
                     <li onclick="showSection('search')"><i class="fa-solid fa-magnifying-glass"></i> Search</li>
                     <li onclick="showSection('library')"><i class="fa-solid fa-heart"></i> My Library</li>
-                    <li onclick="showSection('download')"><i class="fa-solid fa-cloud-arrow-down"></i> Download</li>
                 </ul>
             </nav>
         </aside>
@@ -35,6 +34,11 @@
                 <div class="search-bar">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" id="searchInput" placeholder="Search for artists, tracks...">
+                </div>
+                <div class="user-info">
+                    <button id="user-btn" onclick="handleUserBtnClick()" class="fa-solid fa-user"
+                        style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: absolute; right: 20px; top: 50%; transform: translateY(-50%);">
+                    </button>
                 </div>
             </header>
 
@@ -88,17 +92,23 @@
     </div>
 
     <!-- Client ID Modal -->
+    <!-- User Profile & Settings Modal -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeSettings()">&times;</span>
-            <h2>Settings</h2>
+            <h2>User Profile</h2>
             <div class="input-group">
-                <label for="clientIdInput">Jamendo Client ID</label>
-                <input type="text" id="clientIdInput" placeholder="Enter your Client ID">
-                <p class="hint">Get one at <a href="https://developer.jamendo.com/"
-                        target="_blank">developer.jamendo.com</a></p>
+                <label>Logged in as</label>
+                <input type="text" id="user-name-display" disabled>
             </div>
-            <button id="saveSettingsBtn">Save & Reload</button>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+
+                <button id="sign-out-btn"
+                    style="flex: 1; padding: 8px 16px; background: var(--accent-color); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Sign
+                    Out</button>
+
+            </div>
         </div>
     </div>
 
@@ -113,6 +123,10 @@
             </div>
             <div class="like-btn">
                 <i class="fa-solid fa-heart"></i>
+
+            </div>
+            <div class="download-btn">
+                <i class="fa-solid fa-arrow-down"></i>
             </div>
         </div>
 
