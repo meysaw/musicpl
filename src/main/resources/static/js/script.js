@@ -1,11 +1,6 @@
 const DEFAULT_CLIENT_ID = '841052ed';
-const SUSPENDED_ID = 'a5518597';
 const API_URL = 'https://api.jamendo.com/v3.0';
 
-// Auto-fix: If local storage has the suspended ID, clear it to use the new default
-if (localStorage.getItem('jamendo_client_id') === SUSPENDED_ID) {
-    localStorage.removeItem('jamendo_client_id');
-}
 
 let clientId = localStorage.getItem('jamendo_client_id') || DEFAULT_CLIENT_ID;
 
@@ -84,6 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Pre-fill client ID input if it exists
     const idInput = document.getElementById('clientIdInput');
     if (idInput) idInput.value = clientId;
+    const collapseBtn = document.getElementById('collapse-btn');
+    if (collapseBtn) collapseBtn.addEventListener('click', toggleSidebar);
+
 });
 
 function checkLoginStatus() {
@@ -97,7 +95,10 @@ function checkLoginStatus() {
 
     }
 }
-
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+}
 function handleUserBtnClick() {
     const userJson = localStorage.getItem('jamplayer_current_user');
     if (userJson) {
@@ -173,7 +174,7 @@ async function fetchTrendingTracks() {
     document.getElementById('api-error-message').style.display = 'none';
 
     try {
-        const response = await fetch(`${API_URL}/tracks/?client_id=${clientId}&format=jsonpretty&limit=12&order=popularity_week`);
+        const response = await fetch(`${API_URL}/tracks/?client_id=${clientId}&format=jsonpretty&limit=21&order=popularity_week`);
         const data = await response.json();
 
         if (data.headers && data.headers.status === 'failed') {
@@ -199,7 +200,7 @@ async function searchTracks(query) {
     document.getElementById('api-error-message').style.display = 'none';
 
     try {
-        const response = await fetch(`${API_URL}/tracks/?client_id=${clientId}&format=jsonpretty&limit=20&namesearch=${encodeURIComponent(query)}`);
+        const response = await fetch(`${API_URL}/tracks/?client_id=${clientId}&format=jsonpretty&limit=30&namesearch=${encodeURIComponent(query)}`);
         const data = await response.json();
 
         if (data.headers && data.headers.status === 'failed') {

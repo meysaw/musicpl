@@ -1,158 +1,218 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>musiQ</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jamendo Player</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-
-<body>
-
+  <body>
     <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <i class="fa-solid fa-music"> </i>
-                <span>musiQ</span>
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-music"> </i>
+          <span>musiQ</span>
+          <button class="collapse-btn" id="collapse-btn">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+        <nav>
+          <ul>
+            <li class="active" onclick="showSection('home')">
+              <i class="fa-solid fa-house"></i> Home
+            </li>
+            <li onclick="showSection('search')">
+              <i class="fa-solid fa-magnifying-glass"></i> Search
+            </li>
+            <li onclick="showSection('library')">
+              <i class="fa-solid fa-heart"></i> My Library
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header>
+          <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search for artists, tracks..."
+            />
+          </div>
+          <div class="user-info">
+            <button
+              id="user-btn"
+              onclick="handleUserBtnClick()"
+              class="fa-solid fa-user"
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+              "
+            ></button>
+          </div>
+        </header>
+
+        <section id="content" class="content-area">
+          <!-- Dynamic Content Here -->
+          <div id="home-view">
+            <h2>Trending Now</h2>
+            <div class="track-grid" id="trending-tracks">
+              <!-- Tracks injected here -->
             </div>
-            <nav>
-                <ul>
-                    <li class="active" onclick="showSection('home')"><i class="fa-solid fa-house"></i> Home</li>
-                    <li onclick="showSection('search')"><i class="fa-solid fa-magnifying-glass"></i> Search</li>
-                    <li onclick="showSection('library')"><i class="fa-solid fa-heart"></i> My Library</li>
-                </ul>
-            </nav>
-        </aside>
+          </div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <header>
-                <div class="search-bar">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="searchInput" placeholder="Search for artists, tracks...">
-                </div>
-                <div class="user-info">
-                    <button id="user-btn" onclick="handleUserBtnClick()" class="fa-solid fa-user"
-                        style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: absolute; right: 20px; top: 50%; transform: translateY(-50%);">
-                    </button>
-                </div>
-            </header>
+          <div id="search-results" style="display: none">
+            <h2>Search Results</h2>
+            <div class="track-list" id="search-tracks-list">
+              <!-- Search results injected here -->
+            </div>
+          </div>
 
-            <section id="content" class="content-area">
-                <!-- Dynamic Content Here -->
-                <div id="home-view">
-                    <h2>Trending Now</h2>
-                    <div class="track-grid" id="trending-tracks">
-                        <!-- Tracks injected here -->
-                    </div>
-                </div>
+          <div id="library-view" style="display: none">
+            <h2>My Library</h2>
+            <div class="track-list" id="library-tracks-list">
+              <!-- Liked tracks injected here -->
+            </div>
+          </div>
 
-                <div id="search-results" style="display: none;">
-                    <h2>Search Results</h2>
-                    <div class="track-list" id="search-tracks-list">
-                        <!-- Search results injected here -->
-                    </div>
-                </div>
-
-                <div id="library-view" style="display: none;">
-                    <h2>My Library</h2>
-                    <div class="track-list" id="library-tracks-list">
-                        <!-- Liked tracks injected here -->
-                    </div>
-                </div>
-
-                <div id="download-view" style="display: none;">
-                    <h2>Download from YouTube</h2>
-                    <div class="input-group">
-                        <label>YouTube Link</label>
-                        <input type="text" id="yt-link-input"
-                            placeholder="Paste YouTube link here (e.g. https://youtu.be/...)">
-                        <button id="yt-download-btn"
-                            style="margin-top: 15px; width: 100%; padding: 12px; background: var(--accent-gradient); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white;">Original
-                            Download</button>
-                        <div id="download-status" style="margin-top: 15px;"></div>
-                    </div>
-                </div>
-
-                <!-- Error/Config Message -->
-                <div id="api-error-message"
-                    style="display: none; background: #ff444433; border: 1px solid #ff4444; padding: 20px; border-radius: 8px; margin-top: 20px;">
-                    <h3><i class="fa-solid fa-triangle-exclamation"></i> API Error</h3>
-                    <p id="error-text">Unable to load music.</p>
-                    <button onclick="openSettings()"
-                        style="margin-top: 10px; padding: 8px 16px; background: var(--accent-color); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Update
-                        Client ID</button>
-                </div>
-            </section>
-        </main>
+          <!-- Error/Config Message -->
+          <div
+            id="api-error-message"
+            style="
+              display: none;
+              background: #ff444433;
+              border: 1px solid #ff4444;
+              padding: 20px;
+              border-radius: 8px;
+              margin-top: 20px;
+            "
+          >
+            <h3><i class="fa-solid fa-triangle-exclamation"></i> API Error</h3>
+            <p id="error-text">Unable to load music.</p>
+            <button
+              onclick="openSettings()"
+              style="
+                margin-top: 10px;
+                padding: 8px 16px;
+                background: var(--accent-color);
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+              "
+            >
+              Update Client ID
+            </button>
+          </div>
+        </section>
+      </main>
     </div>
 
     <!-- Client ID Modal -->
     <!-- User Profile & Settings Modal -->
     <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeSettings()">&times;</span>
-            <h2>User Profile</h2>
-            <div class="input-group">
-                <label>Logged in as</label>
-                <input type="text" id="user-name-display" disabled>
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-
-                <button id="sign-out-btn"
-                    style="flex: 1; padding: 8px 16px; background: var(--accent-color); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Sign
-                    Out</button>
-
-            </div>
+      <div class="modal-content">
+        <span class="close" onclick="closeSettings()">&times;</span>
+        <h2>User Profile</h2>
+        <div class="input-group">
+          <label>Logged in as</label>
+          <input type="text" id="user-name-display" disabled />
         </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 15px">
+          <button
+            id="sign-out-btn"
+            style="
+              flex: 1;
+              padding: 8px 16px;
+              background: var(--accent-color);
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+              font-weight: bold;
+            "
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Music Player Bar -->
     <div class="player-bar">
-        <div class="track-info">
-            <img src="https://via.placeholder.com/64" alt="Album Art" id="player-img">
+      <div class="track-info">
+        <img
+          src="https://via.placeholder.com/64"
+          alt="Album Art"
+          id="player-img"
+        />
 
-            <div class="text">
-                <h4 id="player-title">Select a track</h4>
-                <p id="player-artist">--</p>
-            </div>
-            <div class="like-btn">
-                <i class="fa-solid fa-heart"></i>
-
-            </div>
-            <div class="download-btn">
-                <i class="fa-solid fa-arrow-down"></i>
-            </div>
+        <div class="text">
+          <h4 id="player-title">Select a track</h4>
+          <p id="player-artist">--</p>
         </div>
-
-        <div class="player-center">
-            <div class="controls">
-                <button id="prevBtn"><i class="fa-solid fa-backward-step"></i></button>
-                <button id="playBtn" class="play-pause"><i class="fa-solid fa-play"></i></button>
-                <button id="nextBtn"><i class="fa-solid fa-forward-step"></i></button>
-            </div>
-            <div class="progress-area">
-                <span id="currentTime">0:00</span>
-                <input type="range" id="progressBar" min="0" value="0" step="1">
-                <span id="totalDuration">0:00</span>
-            </div>
-
+        <div class="like-btn">
+          <i class="fa-solid fa-heart"></i>
         </div>
-
-        <div class="volume-control">
-            <i class="fa-solid fa-volume-high"></i>
-            <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+        <div class="download-btn">
+          <i class="fa-solid fa-arrow-down"></i>
         </div>
+      </div>
 
-        <audio id="audioPlayer"></audio>
+      <div class="player-center">
+        <div class="controls">
+          <button id="prevBtn">
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+          <button id="playBtn" class="play-pause">
+            <i class="fa-solid fa-play"></i>
+          </button>
+          <button id="nextBtn"><i class="fa-solid fa-forward-step"></i></button>
+        </div>
+        <div class="progress-area">
+          <span id="currentTime">0:00</span>
+          <input type="range" id="progressBar" min="0" value="0" step="1" />
+          <span id="totalDuration">0:00</span>
+        </div>
+      </div>
+
+      <div class="volume-control">
+        <i class="fa-solid fa-volume-high"></i>
+        <input
+          type="range"
+          id="volumeSlider"
+          min="0"
+          max="1"
+          step="0.1"
+          value="1"
+        />
+      </div>
+
+      <audio id="audioPlayer"></audio>
     </div>
 
     <script src="js/script.js"></script>
-</body>
-
+  </body>
 </html>

@@ -1,42 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - musiQ</title>
+    <meta
+      name="description"
+      content="Login to your musiQ account to access your music library"
+    />
+    <link rel="stylesheet" href="css/home.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - JamPlayer</title>
-    <meta name="description" content="Login to your JamPlayer account to access your music library">
-    <link rel="stylesheet" href="css/home.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-
-<body>
+  <body>
     <!-- Animated Background Orbs -->
     <div class="bg-orb bg-orb-1"></div>
     <div class="bg-orb bg-orb-2"></div>
     <div class="bg-orb bg-orb-3"></div>
     <div class="welcome">
-        <div class="logo">
-            <i class="fa-solid fa-music"> </i>
-            <span>musiQ</span>
-        </div>
-        <p class="welcome-text">Listen and Download Copyright Free Music for Your Projects.</p>
+      <div class="logo">
+        <i class="fa-solid fa-music"> </i>
+        <span>musiQ</span>
+      </div>
+      <p class="welcome-text">
+        Listen and Download Copyright Free Music for Your Projects.
+      </p>
 
-        <div class="buttons">
-            <button class="login-btn">Login</button>
-            <button class="register-btn">Register</button>
-        </div>
+      <div class="buttons">
+        <button class="login-btn">Login</button>
+        <button class="register-btn">Register</button>
+      </div>
     </div>
-
+    <div class="Footer">
+      <p>All rights reserved &copy; 2026 musiQ</p>
+    </div>
     <script>
-        document.querySelector('.login-btn').addEventListener('click', () => {
-            window.location.href = '/login.html';
-        });
-        document.querySelector('.register-btn').addEventListener('click', () => {
-            window.location.href = '/signup.html';
-        });
+      document.querySelector(".login-btn").addEventListener("click", () => {
+        window.location.href = "/login.html";
+      });
+      document.querySelector(".register-btn").addEventListener("click", () => {
+        window.location.href = "/signup.html";
+      });
     </script>
-</body>
-
+  </body>
 </html>
